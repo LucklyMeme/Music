@@ -1,0 +1,85 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>传智音乐</title>
+    {{include './particals/links.html' }}
+</head>
+
+<body>
+     {{include './particals/header.html'}}
+    <div class="container">
+        <form id="form" method="post" action="/">
+            <div class="form-group">
+                <label for="">歌曲标题</label>
+                <input type="text" name="title" class="form-control" placeholder="请输入歌曲标题">
+            </div>
+            <div class="form-group">
+                <label for="">歌曲时长</label>
+                <input type="text" name="time" class="form-control" placeholder="请输入歌曲时长">
+            </div>
+            <div class="form-group">
+                <label for="">歌手</label>
+                <input type="text" name="singer" class="form-control" placeholder="请输入歌手姓名">
+            </div>
+            <div class="form-group">
+                <label for="">歌曲文件</label>
+                <input type="file" name="file">
+                <p class="help-block">请上传歌曲文件.</p>
+            </div>
+            <div class="form-group">
+                <label for="">歌词文件</label>
+                <input type="file" name="filelrc">
+                <p class="help-block">请上传歌曲文件.</p>
+            </div>
+            <button type="submit" class="btn btn-success">点击添加</button>
+        </form>
+    </div>
+   {{include './particals/footer.html'}}
+    
+    <script type="text/javascript">
+        //表单提交事件
+        $('#form').on('submit',function(e){
+            e.preventDefault();
+
+            var inputs = $('input');
+            //获取表单中的值
+           // console.log( $(this).serialize());
+           // 用来装载数据是文件的方式
+           var formData = new FormData(); //装数据的篮子
+           //把数据装进去 formData.append(服务器接受的名,数据);
+           formData.append('title',inputs[0].value);
+           formData.append('time',inputs[1].value);
+           formData.append('singer',inputs[2].value);
+           // console.log(inputs[3].value); 盘符的绝对路径
+           formData.append('file',inputs[3].files[0]);
+           formData.append('filelrc',inputs[4].files[0]);
+
+           $.ajax({
+                url:'/api/add-music',
+                type:'post',
+                data:formData,
+                contentType:false, //默认加上键值对的头
+                processData:false,///转换你的数据
+                dataType:'json',
+                success:function(data){
+                    if(data.code == '001'){
+                        if(confirm('亲，上传成功，去听歌？^_^')){
+                            location.href = '/music/list-music';
+                        }
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+           })
+
+
+        })
+
+
+    </script>
+
+
+</body>
+
+</html>

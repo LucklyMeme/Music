@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>传智音乐</title>
+    {{include './particals/links.html' }}
+</head>
+
+<body>
+    {{include './particals/header.html'}}
+    <div class="container">
+        <div class="page-header">
+            <h1><a href="/">我的音乐</a><small>--编辑音乐</small><h1>
+        </div>
+    </div>
+    <div class="container">
+        <form id="form" method="post" action="">
+            <div class="form-group">
+                <label for="">歌曲标题</label>
+                <input type="text" name="title" class="form-control" placeholder="请输入歌曲标题" value="{{music.title}}" >
+            </div>
+            <div class="form-group">
+                <label for="">歌曲时长</label>
+                <input type="text" name="time" class="form-control" placeholder="请输入歌曲时长" value="{{music.time}}"  >
+            </div>
+            <div class="form-group">
+                <label for="">歌手</label>
+                <input type="text" name="singer" class="form-control" placeholder="请输入歌手姓名" value="{{music.singer}}">
+            </div>
+            <div class="form-group">
+                <label for="">歌曲文件</label>
+                <input type="file" name="file" value={{music.file}}>
+                <p class="help-block">请上传歌曲文件.</p>
+            </div>
+             <div class="form-group">
+                <label for="">歌词文件</label>
+                <input type="file" name="filelrc" value={{music.filelrc}}>
+                <p class="help-block">请上传歌词文件.</p>
+            </div>
+                <input type="hidden" name="id" value={{music.id}}>
+            <button type="submit" class="btn btn-success">完成编辑</button>
+
+        </form>
+    </div>
+        {{include './particals/footer.html'}}
+
+        <script type="text/javascript">
+            //注册表单提交事件
+            $('#form').on('submit',function(e){
+                //取消默认事件
+                e.preventDefault();
+                //获取各个数据装入FormData
+                var fd = new FormData();
+                var inputs = document.querySelectorAll('input');
+                var title = inputs[0].value;
+                var time = inputs[1].value;
+                var singer = inputs[2].value;
+                var file = inputs[3].files[0];//文件对象
+                var filelrc = inputs[4].files[0];//歌词的文件对象
+                var id = inputs[5].value;
+
+                //将数据加入fd
+                fd.append('title',title);
+                fd.append('time',time);
+                fd.append('singer',singer);
+                fd.append('file',file);
+                fd.append('filelrc',filelrc);
+                fd.append('id',id);
+
+                $.ajax({
+                    url:'/api/update-music',
+                    type:'put',
+                    data:fd,
+                    dataType:'json',
+                    //不要设置头
+                    contentType:false,
+                    //不要转换数据
+                    processData:false,
+                    success:function(data){
+                        //如果成功？ 去听歌
+                        if(data.code == '001'){
+                            if(confirm('更新成功,是否去听歌?')){
+                                location.href = '/music/list-music';
+                            }
+                            return;
+                        }
+
+                        // 002 更新失败
+                        alert(data.msg);
+
+
+
+                    }
+
+                })
+
+
+
+            })
+
+        </script>
+
+
+</body>
+</html>

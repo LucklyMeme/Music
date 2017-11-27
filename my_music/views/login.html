@@ -1,0 +1,86 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>传智音乐</title>
+    {{include './particals/links.html' }}
+</head>
+
+<body>
+     {{include './particals/header.html'}}
+    <link href="/public/css/login.css" rel="stylesheet" type="text/css" />
+    <div id="wrapper">
+        <div class="aw-login-box">
+            <div class="mod-body clearfix">
+                <div class="content pull-left">
+                    <h1 class="logo"><a href=""></a></h1>
+                    <h2 style="color:red;" id="msg"></h2>
+                    <form action="/" method="post" id="login_form">
+                        <ul>
+                            <li>
+                                <input type="text" id="aw-login-user-name" class="form-control" placeholder="用户名" name="username" value="" />
+                            </li>
+                            <li>
+                                <input type="password" id="aw-login-user-password" class="form-control" placeholder="密码" name="password" value="" />
+                            </li>
+                            <li class="alert alert-danger hide error_message">
+                                <i class="icon icon-delete"></i> <em></em>
+                            </li>
+                            <li class="last">
+                                <input type="submit" class="pull-right btn btn-large btn-primary" value="登录">
+                                <label>
+                                    <input type="checkbox" value="1" name="remember_me" /> 记住我 </label>
+                                <a href="http://wenda.golaravel.com/account/find_password/">&nbsp;&nbsp;忘记密码</a>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+                <div class="side-bar pull-left">
+                    <img src="/public/img/a.png" style="width: 160px">
+                </div>
+            </div>
+            <div class="mod-footer">
+                <span>还没有账号?</span>&nbsp;&nbsp;
+                <a href="/register">立即注册</a>&nbsp;&nbsp;•&nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
+{{include './particals/footer.html'}}
+
+
+    <script type="text/javascript">
+        // 表单提交事件
+        $('#login_form').on('submit',function(e){
+            //禁止默认事件
+            e.preventDefault();
+            //获取表单内的数据
+            var data = $(this).serialize(); //请求体
+            //请求头默认
+            //请求行
+            var url = '/api/do-login';
+            //发请求
+            $.ajax({
+                type:'post',
+                url:url,
+                data:data,
+                dataType:'json',
+                success:function(data){
+                    if(data.code == '001'){
+                       if(confirm('登录成功,去首页听歌?^_^')){
+                             //页面跳转
+                            location.href = '/music/list-music';  
+                       }
+                       return;
+                    }
+                    $('#msg').text(data.msg);
+                }
+            })
+        });
+
+
+    </script>
+
+
+</body>
+
+</html>

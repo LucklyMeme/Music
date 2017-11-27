@@ -1,0 +1,39 @@
+    <div class="aw-top-menu-wrap">
+        <div class="container1">
+            <!-- 用户栏 -->
+            <div class="aw-user-nav">
+    {{if user}}
+        <a href="" class="aw-user-nav-dropdown">{{user.username}}</a>
+        <div class="aw-dropdown dropdown-list pull-right">
+            <ul class="aw-dropdown-list">
+                <li><a href="/logout" id="logout"><i class="icon icon-logout"></i>退出</a></li>
+            </ul>
+        </div>
+    {{else}}            <!-- 登陆&注册栏 -->
+         <span>
+            <a class="register btn btn-normal btn-success" href="/user/register">注册</a>
+            <a class="login btn btn-normal btn-primary" href="/user/login">登录</a>
+          </span>
+     {{/if}}
+                <!-- end 登陆&注册栏 -->
+            </div>
+            <!-- end 用户栏 -->
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#logout').on('click',function(e){
+            e.preventDefault();
+            $.ajax({
+                url:'/api/logout',
+                type:'get',
+                dataType:'json',
+                success:function(data){
+                    if(data.code == '001'){
+                        location.href = '/user/login';
+                    }
+                }
+            })
+        })
+
+    </script>
